@@ -42,21 +42,21 @@ api.interceptors.response.use(
 
 // Auth API
 export const authAPI = {
-  register: (userData) => api.post("/auth/register", userData),
-  login: (credentials) => api.post("/auth/login", credentials),
+  register: (userData: any) => api.post("/auth/register", userData),
+  login: (credentials: any) => api.post("/auth/login", credentials),
   logout: () => api.get("/auth/logout"),
   getProfile: () => api.get("/auth/me"),
-  updateProfile: (userData) => api.put("/auth/updatedetails", userData),
-  updatePassword: (passwordData) => api.put("/auth/updatepassword", passwordData),
-  forgotPassword: (email) => api.post("/auth/forgotpassword", { email }),
-  resetPassword: (token, password) => api.put(`/auth/resetpassword/${token}`, { password }),
+  updateProfile: (userData: any) => api.put("/auth/updatedetails", userData),
+  updatePassword: (passwordData: any) => api.put("/auth/updatepassword", passwordData),
+  forgotPassword: (email: any) => api.post("/auth/forgotpassword", { email }),
+  resetPassword: (token: any, password: any) => api.put(`/auth/resetpassword/${token}`, { password }),
 }
 
 // Complaints API
 export const complaintsAPI = {
-  getComplaints: (params) => api.get("/complaints", { params }),
-  getComplaint: (id) => api.get(`/complaints/${id}`),
-  createComplaint: (complaintData) => {
+  getComplaints: (params: any) => api.get("/complaints", { params }),
+  getComplaint: (id: any) => api.get(`/complaints/${id}`),
+  createComplaint: (complaintData: { [x: string]: string | Blob; attachments?: any }) => {
     // Handle form data with files
     const formData = new FormData()
 
@@ -69,7 +69,7 @@ export const complaintsAPI = {
 
     // Add attachments
     if (complaintData.attachments && complaintData.attachments.length > 0) {
-      complaintData.attachments.forEach((file) => {
+      complaintData.attachments.forEach((file: string | Blob) => {
         formData.append("attachments", file)
       })
     }
@@ -80,11 +80,11 @@ export const complaintsAPI = {
       },
     })
   },
-  updateComplaint: (id, complaintData) => api.put(`/complaints/${id}`, complaintData),
-  trackComplaint: (complaintId) => api.get(`/complaints/track/${complaintId}`),
-  uploadAttachments: (id, files) => {
+  updateComplaint: (id: any, complaintData: any) => api.put(`/complaints/${id}`, complaintData),
+  trackComplaint: (complaintId: any) => api.get(`/complaints/track/${complaintId}`),
+  uploadAttachments: (id: any, files: any[]) => {
     const formData = new FormData()
-    files.forEach((file) => {
+    files.forEach((file: string | Blob) => {
       formData.append("attachments", file)
     })
 
@@ -94,37 +94,37 @@ export const complaintsAPI = {
       },
     })
   },
-  deleteAttachment: (complaintId, attachmentId) => api.delete(`/complaints/${complaintId}/attachments/${attachmentId}`),
+  deleteAttachment: (complaintId: any, attachmentId: any) => api.delete(`/complaints/${complaintId}/attachments/${attachmentId}`),
 }
 
 // Users API
 export const usersAPI = {
-  getUsers: (params) => api.get("/users", { params }),
-  getUser: (id) => api.get(`/users/${id}`),
-  updateUser: (id, userData) => api.put(`/users/${id}`, userData),
-  deleteUser: (id) => api.delete(`/users/${id}`),
-  changeRole: (id, role) => api.put(`/users/${id}/role`, { role }),
-  changeStatus: (id, status) => api.put(`/users/${id}/status`, { status }),
+  getUsers: (params: any) => api.get("/users", { params }),
+  getUser: (id: any) => api.get(`/users/${id}`),
+  updateUser: (id: any, userData: any) => api.put(`/users/${id}`, userData),
+  deleteUser: (id: any) => api.delete(`/users/${id}`),
+  changeRole: (id: any, role: any) => api.put(`/users/${id}/role`, { role }),
+  changeStatus: (id: any, status: any) => api.put(`/users/${id}/status`, { status }),
 }
 
 // Departments API
 export const departmentsAPI = {
   getDepartments: () => api.get("/departments"),
-  getDepartment: (id) => api.get(`/departments/${id}`),
-  createDepartment: (departmentData) => api.post("/departments", departmentData),
-  updateDepartment: (id, departmentData) => api.put(`/departments/${id}`, departmentData),
-  deleteDepartment: (id) => api.delete(`/departments/${id}`),
+  getDepartment: (id: any) => api.get(`/departments/${id}`),
+  createDepartment: (departmentData: any) => api.post("/departments", departmentData),
+  updateDepartment: (id: any, departmentData: any) => api.put(`/departments/${id}`, departmentData),
+  deleteDepartment: (id: any) => api.delete(`/departments/${id}`),
 }
 
 // Messages API
 export const messagesAPI = {
   getConversations: () => api.get("/messages/conversations"),
-  getConversation: (id) => api.get(`/messages/conversations/${id}`),
-  createConversation: (conversationData) => api.post("/messages/conversations", conversationData),
-  getMessages: (conversationId) => api.get(`/messages/conversations/${conversationId}/messages`),
-  sendMessage: (conversationId, messageData) =>
+  getConversation: (id: any) => api.get(`/messages/conversations/${id}`),
+  createConversation: (conversationData: any) => api.post("/messages/conversations", conversationData),
+  getMessages: (conversationId: any) => api.get(`/messages/conversations/${conversationId}/messages`),
+  sendMessage: (conversationId: any, messageData: any) =>
     api.post(`/messages/conversations/${conversationId}/messages`, messageData),
-  markAsRead: (conversationId) => api.put(`/messages/conversations/${conversationId}/read`),
+  markAsRead: (conversationId: any) => api.put(`/messages/conversations/${conversationId}/read`),
 }
 
 // Dashboard API
@@ -137,7 +137,7 @@ export const dashboardAPI = {
 // Notifications API
 export const notificationsAPI = {
   getNotifications: () => api.get("/notifications"),
-  markAsRead: (id) => api.put(`/notifications/${id}/read`),
+  markAsRead: (id: any) => api.put(`/notifications/${id}/read`),
   markAllAsRead: () => api.put("/notifications/read-all"),
 }
 

@@ -1,10 +1,26 @@
-import Link from "next/link"
-import { FileText, Search, History, ArrowRight } from "lucide-react"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
-import { CitizenHeader } from "./components/citizen-header"
+"use client"
+
+import Link from "next/link";
+import { FileText, Search, History, ArrowRight } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
+import { CitizenHeader } from "./components/citizen-header";
+import { redirect } from "next/navigation";
+import { ChangeEvent, useState } from "react";
 
 export default function Home() {
+  const [complaintId, setComplaintId] = useState("");
+  const handleTrackClicked = () => {
+    redirect(`/track-complaint?id=${complaintId}`);
+  };
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement>): void => {
+    setComplaintId(e.target.value);
+  };
+  const handleKeyDown = (e: KeyboardEvent<HTMLInputElement>): void => {
+    if (e.key === "Enter") {
+      handleTrackClicked();
+    }
+  };
   return (
     <div className="flex min-h-screen flex-col">
       <CitizenHeader />
@@ -19,8 +35,9 @@ export default function Home() {
                   Your Voice Matters. We're Listening.
                 </h1>
                 <p className="max-w-[600px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-gray-400">
-                  Submit and track your complaints with ease. Our platform connects you directly with government
-                  departments for faster resolution.
+                  Submit and track your complaints with ease. Our platform
+                  connects you directly with government departments for faster
+                  resolution.
                 </p>
                 <div className="flex flex-col sm:flex-row gap-4 mt-8">
                   <Button size="lg" asChild>
@@ -29,8 +46,18 @@ export default function Home() {
                     </Link>
                   </Button>
                   <div className="flex w-full max-w-sm items-center space-x-2">
-                    <Input type="text" placeholder="Enter Complaint ID" />
-                    <Button type="submit" variant="outline">
+                    <Input
+                      type="text"
+                      placeholder="Enter Complaint ID"
+                      value={complaintId}
+                      onChange={handleInputChange}
+                      onKeyDown={handleKeyDown}
+                    />
+                    <Button
+                      type="submit"
+                      variant="outline"
+                      onClick={handleTrackClicked}
+                    >
                       <Search className="h-4 w-4 mr-2" /> Track
                     </Button>
                   </div>
@@ -52,7 +79,9 @@ export default function Home() {
           <div className="container px-4 md:px-6">
             <div className="flex flex-col items-center justify-center space-y-4 text-center">
               <div className="space-y-2">
-                <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">Quick Access</h2>
+                <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
+                  Quick Access
+                </h2>
                 <p className="max-w-[900px] text-gray-500 md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed dark:text-gray-400">
                   Access key features of our platform with just one click
                 </p>
@@ -105,19 +134,27 @@ export default function Home() {
             <div className="grid gap-6 lg:grid-cols-4">
               <div className="flex flex-col items-center justify-center space-y-2 rounded-lg border bg-background p-6 shadow-sm">
                 <h3 className="text-3xl font-bold">98%</h3>
-                <p className="text-center text-sm text-gray-500 dark:text-gray-400">Resolution Rate</p>
+                <p className="text-center text-sm text-gray-500 dark:text-gray-400">
+                  Resolution Rate
+                </p>
               </div>
               <div className="flex flex-col items-center justify-center space-y-2 rounded-lg border bg-background p-6 shadow-sm">
                 <h3 className="text-3xl font-bold">24h</h3>
-                <p className="text-center text-sm text-gray-500 dark:text-gray-400">Average Response Time</p>
+                <p className="text-center text-sm text-gray-500 dark:text-gray-400">
+                  Average Response Time
+                </p>
               </div>
               <div className="flex flex-col items-center justify-center space-y-2 rounded-lg border bg-background p-6 shadow-sm">
                 <h3 className="text-3xl font-bold">10k+</h3>
-                <p className="text-center text-sm text-gray-500 dark:text-gray-400">Complaints Resolved</p>
+                <p className="text-center text-sm text-gray-500 dark:text-gray-400">
+                  Complaints Resolved
+                </p>
               </div>
               <div className="flex flex-col items-center justify-center space-y-2 rounded-lg border bg-background p-6 shadow-sm">
                 <h3 className="text-3xl font-bold">50+</h3>
-                <p className="text-center text-sm text-gray-500 dark:text-gray-400">Government Departments</p>
+                <p className="text-center text-sm text-gray-500 dark:text-gray-400">
+                  Government Departments
+                </p>
               </div>
             </div>
           </div>
@@ -130,19 +167,27 @@ export default function Home() {
             © 2025 CitizenOne. All rights reserved.
           </p>
           <nav className="flex flex-wrap justify-center gap-4 md:gap-6 md:justify-end">
-            <Link href="#" className="text-sm text-gray-500 hover:underline dark:text-gray-400">
+            <Link
+              href="#"
+              className="text-sm text-gray-500 hover:underline dark:text-gray-400"
+            >
               Terms of Service
             </Link>
-            <Link href="#" className="text-sm text-gray-500 hover:underline dark:text-gray-400">
+            <Link
+              href="#"
+              className="text-sm text-gray-500 hover:underline dark:text-gray-400"
+            >
               Privacy Policy
             </Link>
-            <Link href="#" className="text-sm text-gray-500 hover:underline dark:text-gray-400">
+            <Link
+              href="#"
+              className="text-sm text-gray-500 hover:underline dark:text-gray-400"
+            >
               Accessibility
             </Link>
           </nav>
         </div>
       </footer>
     </div>
-  )
+  );
 }
-

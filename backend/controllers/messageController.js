@@ -55,12 +55,12 @@ export const getMessages = async (req, res) => {
 
 export const sendMessage = async (req, res) => {
   try {
-    const { text } = req.body;
+    const { content } = req.body;
     const attachments = req.files ? req.files.map(file => file.path) : [];
     const message = new Message({
-      conversationId: req.params.id,
+      conversation: req.params.id,
       sender: req.user.id,
-      text,
+      content,
       attachments,
     });
     await message.save();

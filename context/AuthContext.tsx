@@ -34,6 +34,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(true)
   const [error, setError] = useState<string | null>(null)
   const [isAuthenticated, setIsAuthenticated] = useState(false)
+
   const router = useRouter()
 
   // Load user on initial load
@@ -63,7 +64,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   }, [])
 
   // Login user
-  const login = async (email: string, password: string) => {
+  const login = async (email: string, password: string, loginType: string) => {
     try {
       setLoading(true)
       setError(null)
@@ -74,11 +75,15 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
       setUser(res.data.user)
       setIsAuthenticated(true)
 
+      console.log("User Login : ",res.data.user.role, loginType)
       // Redirect based on role
-      if (res.data.user.role === "admin" || res.data.user.role === "supervisor" || res.data.user.role === "officer") {
-        router.push("/admin")
+      if (loginType === "admin" && (res.data.user.role === "admin" || res.data.user.role === "supervisor" || res.data.user.role === "officer")) {
+        console.log("Admin success")
+        await router.push("/admin")
+        console.log("Admin success 2")
       } else {
-        router.push("/dashboard")
+        console.log("In else section")
+        await router.push("/dashboard")
       }
     } catch (err: any) {
       setError(err.response?.data?.message || "Login failed. Please try again.")

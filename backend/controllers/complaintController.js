@@ -34,7 +34,7 @@ export const createComplaint = asyncHandler(async (req, res) => {
   // Set initial timeline entry
   req.body.timeline = [
     {
-      status: "submitted",
+      status: "Submitted",
       description: "Complaint submitted successfully",
       updatedBy: req.user.id,
     },

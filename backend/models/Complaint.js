@@ -15,7 +15,7 @@ const complaintSchema = new mongoose.Schema(
     category: {
       type: String,
       required: [true, "Category is required"],
-      enum: ["water", "electricity", "roads", "sanitation", "public_services", "other"],
+      enum: ["Water Supply", "Electricity", "Roads & Infrastructure", "Sanitation & Waste", "Public Services", "Other"],
     },
     description: {
       type: String,
@@ -29,13 +29,13 @@ const complaintSchema = new mongoose.Schema(
     },
     status: {
       type: String,
-      enum: ["submitted", "under_review", "in_progress", "resolved", "reopened"],
-      default: "submitted",
+      enum: ["Submitted", "Under_review", "In_progress", "Resolved", "Reopened"],
+      default: "Submitted",
     },
     priority: {
       type: String,
-      enum: ["low", "medium", "high"],
-      default: "medium",
+      enum: ["Low", "Medium", "High"],
+      default: "Medium",
     },
     assignedTo: {
       department: {
@@ -51,7 +51,7 @@ const complaintSchema = new mongoose.Schema(
       {
         status: {
           type: String,
-          enum: ["submitted", "under_review", "in_progress", "resolved", "reopened"],
+          enum: ["Submitted", "Under_review", "In_progress", "Resolved", "Reopened"],
         },
         description: String,
         timestamp: {

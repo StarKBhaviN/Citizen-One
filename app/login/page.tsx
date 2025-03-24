@@ -20,7 +20,7 @@ export default function LoginPage() {
   const { login, error, loading, clearError, isAuthenticated } = useAuth()
   const router = useRouter()
   const searchParams = useSearchParams()
-  const callbackUrl = searchParams.get("callbackUrl") || "/dashboard"
+  const callbackUrl = searchParams.get("callbackUrl")
   const { toast } = useToast()
 
   const [showPassword, setShowPassword] = useState(false)
@@ -29,6 +29,8 @@ export default function LoginPage() {
     password: "",
     userType: "citizen",
   })
+
+  console.log(formData)
 
   useEffect(() => {
     // If already authenticated, redirect
@@ -56,7 +58,7 @@ export default function LoginPage() {
     clearError()
 
     try {
-      await login(formData.email, formData.password)
+      await login(formData.email, formData.password, formData.userType)
       toast({
         title: "Login successful",
         description: "You have been logged in successfully.",

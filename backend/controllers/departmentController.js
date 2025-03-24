@@ -124,12 +124,12 @@ export const createDepartment = asyncHandler(async (req, res) => {
     }
 
     // Update user role to supervisor if not already
-    if (head.role !== "supervisor") {
-      await User.findByIdAndUpdate(head._id, {
-        role: "supervisor",
-        department: req.body._id, // This will be set after department creation
-      })
-    }
+    // if (head.role !== "supervisor") {
+    //   await User.findByIdAndUpdate(head._id, {
+    //     role: "supervisor",
+    //     department: req.body._id, // This will be set after department creation
+    //   })
+    // }
   }
 
   const department = await Department.create(req.body)
