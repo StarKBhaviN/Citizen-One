@@ -1,7 +1,7 @@
-"use client"
+"use client";
 
-import Link from "next/link"
-import { usePathname } from "next/navigation"
+import Link from "next/link";
+import { usePathname } from "next/navigation";
 import {
   LayoutDashboard,
   ListTodo,
@@ -17,10 +17,10 @@ import {
   HelpCircle,
   Building2,
   Calendar,
-} from "lucide-react"
-import { cn } from "@/lib/utils"
-import { Button } from "@/components/ui/button"
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
+} from "lucide-react";
+import { cn } from "@/lib/utils";
+import { Button } from "@/components/ui/button";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -28,54 +28,72 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from "@/components/ui/collapsible"
-import { Badge } from "@/components/ui/badge"
-import { ModeToggle } from "@/components/theme-toggle"
-
-const navigation = [
-  { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
-  {
-    name: "Complaints",
-    href: "/admin/complaints",
-    icon: ListTodo,
-    badge: "324",
-    children: [
-      { name: "All Complaints", href: "/admin/complaints" },
-      { name: "Pending", href: "/admin/complaints/pending" },
-      { name: "In Progress", href: "/admin/complaints/in-progress" },
-      { name: "Resolved", href: "/admin/complaints/resolved" },
-    ],
-  },
-  { name: "Analytics", href: "/admin/analytics", icon: BarChart3 },
-  { name: "Users", href: "/admin/users", icon: Users },
-  { name: "Messages", href: "/admin/messages", icon: MessageSquare, badge: "12" },
-  {
-    name: "Departments",
-    href: "/admin/departments",
-    icon: Building2,
-    children: [
-      { name: "Water Department", href: "/admin/departments/water" },
-      { name: "Electricity Department", href: "/admin/departments/electricity" },
-      { name: "Roads Department", href: "/admin/departments/roads" },
-      { name: "Sanitation Department", href: "/admin/departments/sanitation" },
-      { name: "Public Services", href: "/admin/departments/public-services" },
-    ],
-  },
-  { name: "Calendar", href: "/admin/calendar", icon: Calendar },
-  { name: "Reports", href: "/admin/reports", icon: FileText },
-  { name: "Settings", href: "/admin/settings", icon: Settings },
-]
+} from "@/components/ui/dropdown-menu";
+import {
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import { Badge } from "@/components/ui/badge";
+import { ModeToggle } from "@/components/theme-toggle";
+import { useDashboard } from "@/context/DashboardContext";
 
 export function AdminSidebar() {
-  const pathname = usePathname()
+  const { adminStats } = useDashboard();
+  const pathname = usePathname();
 
+  console.log(adminStats?.counts?.totalComplaints)
   const isActive = (href: string) => {
     if (href === "/admin") {
-      return pathname === "/admin"
+      return pathname === "/admin";
     }
-    return pathname.startsWith(href)
-  }
+    return pathname.startsWith(href);
+  };
+
+  const navigation = [
+    { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
+    {
+      name: "Complaints",
+      href: "/admin/complaints",
+      icon: ListTodo,
+      badge: `${adminStats?.counts?.totalComplaints}`,
+      children: [
+        { name: "All Complaints", href: "/admin/complaints" },
+        { name: "Pending", href: "/admin/complaints/pending" },
+        { name: "In Progress", href: "/admin/complaints/in-progress" },
+        { name: "Resolved", href: "/admin/complaints/resolved" },
+      ],
+    },
+    { name: "Analytics", href: "/admin/analytics", icon: BarChart3 },
+    { name: "Users", href: "/admin/users", icon: Users },
+    {
+      name: "Messages",
+      href: "/admin/messages",
+      icon: MessageSquare,
+      badge: "12",
+    },
+    {
+      name: "Departments",
+      href: "/admin/departments",
+      icon: Building2,
+      children: [
+        { name: "Water Department", href: "/admin/departments/water" },
+        {
+          name: "Electricity Department",
+          href: "/admin/departments/electricity",
+        },
+        { name: "Roads Department", href: "/admin/departments/roads" },
+        {
+          name: "Sanitation Department",
+          href: "/admin/departments/sanitation",
+        },
+        { name: "Public Services", href: "/admin/departments/public-services" },
+      ],
+    },
+    { name: "Calendar", href: "/admin/calendar", icon: Calendar },
+    { name: "Reports", href: "/admin/reports", icon: FileText },
+    { name: "Settings", href: "/admin/settings", icon: Settings },
+  ];
 
   return (
     <div className="flex h-screen w-64 flex-col border-r bg-background">
@@ -90,7 +108,7 @@ export function AdminSidebar() {
       <div className="flex-1 overflow-auto py-2">
         <nav className="grid items-start px-2 text-sm">
           {navigation.map((item) => {
-            const active = isActive(item.href)
+            const active = isActive(item.href);
 
             if (item.children) {
               return (
@@ -100,7 +118,9 @@ export function AdminSidebar() {
                       variant="ghost"
                       className={cn(
                         "flex w-full items-center justify-between rounded-lg px-3 py-2 transition-all hover:text-primary",
-                        active ? "bg-primary/10 text-primary" : "text-muted-foreground",
+                        active
+                          ? "bg-primary/10 text-primary"
+                          : "text-muted-foreground"
                       )}
                     >
                       <div className="flex items-center gap-3">
@@ -109,7 +129,10 @@ export function AdminSidebar() {
                       </div>
                       <div className="flex items-center gap-1">
                         {item.badge && (
-                          <Badge variant="outline" className="h-5 px-1.5 text-xs font-normal">
+                          <Badge
+                            variant="outline"
+                            className="h-5 px-1.5 text-xs font-normal"
+                          >
                             {item.badge}
                           </Badge>
                         )}
@@ -120,24 +143,26 @@ export function AdminSidebar() {
                   <CollapsibleContent>
                     <div className="ml-4 mt-1 space-y-1 pl-4 border-l">
                       {item.children.map((child) => {
-                        const childActive = pathname === child.href
+                        const childActive = pathname === child.href;
                         return (
                           <Link
                             key={child.name}
                             href={child.href}
                             className={cn(
                               "flex items-center gap-3 rounded-lg px-3 py-2 transition-all hover:text-primary",
-                              childActive ? "bg-primary/5 text-primary" : "text-muted-foreground",
+                              childActive
+                                ? "bg-primary/5 text-primary"
+                                : "text-muted-foreground"
                             )}
                           >
                             <span>{child.name}</span>
                           </Link>
-                        )
+                        );
                       })}
                     </div>
                   </CollapsibleContent>
                 </Collapsible>
-              )
+              );
             }
 
             return (
@@ -146,7 +171,9 @@ export function AdminSidebar() {
                 href={item.href}
                 className={cn(
                   "flex items-center justify-between rounded-lg px-3 py-2 transition-all hover:text-primary",
-                  active ? "bg-primary/10 text-primary" : "text-muted-foreground",
+                  active
+                    ? "bg-primary/10 text-primary"
+                    : "text-muted-foreground"
                 )}
               >
                 <div className="flex items-center gap-3">
@@ -154,12 +181,15 @@ export function AdminSidebar() {
                   <span>{item.name}</span>
                 </div>
                 {item.badge && (
-                  <Badge variant="outline" className="h-5 px-1.5 text-xs font-normal">
+                  <Badge
+                    variant="outline"
+                    className="h-5 px-1.5 text-xs font-normal"
+                  >
                     {item.badge}
                   </Badge>
                 )}
               </Link>
-            )
+            );
           })}
         </nav>
       </div>
@@ -186,7 +216,10 @@ export function AdminSidebar() {
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="h-9 w-9 rounded-full p-0">
                 <Avatar className="h-9 w-9">
-                  <AvatarImage src="/placeholder.svg?height=36&width=36" alt="Avatar" />
+                  <AvatarImage
+                    src="/placeholder.svg?height=36&width=36"
+                    alt="Avatar"
+                  />
                   <AvatarFallback>AD</AvatarFallback>
                 </Avatar>
               </Button>
@@ -219,6 +252,5 @@ export function AdminSidebar() {
         </div>
       </div>
     </div>
-  )
+  );
 }
-

@@ -50,6 +50,7 @@ export const authAPI = {
   updatePassword: (passwordData: any) => api.put("/auth/updatepassword", passwordData),
   forgotPassword: (email: any) => api.post("/auth/forgotpassword", { email }),
   resetPassword: (token: any, password: any) => api.put(`/auth/resetpassword/${token}`, { password }),
+  getAllUser: () => api.get("/auth/allUser")
 }
 
 // Complaints API

@@ -179,7 +179,6 @@ export default function DashboardPage() {
   });
 
   
-  console.log(user)
   return (
     <div className="flex min-h-screen flex-col">
       <CitizenHeader />
