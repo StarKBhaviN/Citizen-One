@@ -29,97 +29,98 @@ import { Label } from "@/components/ui/label"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { ArrowUpDown, ChevronDown, Filter, Lock, MoreHorizontal, Search, Shield, User, UserPlus } from "lucide-react"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { useAuth } from "@/context/AuthContext"
 
 // Mock data for users
-const users = [
-  {
-    id: 1,
-    name: "John Smith",
-    email: "john.smith@example.com",
-    role: "Citizen",
-    status: "Active",
-    lastActive: "2025-03-12T10:30:00Z",
-    complaints: 4,
-    avatar: "/placeholder.svg?height=40&width=40",
-    initials: "JS",
-  },
-  {
-    id: 2,
-    name: "Jane Doe",
-    email: "jane.doe@example.com",
-    role: "Citizen",
-    status: "Active",
-    lastActive: "2025-03-11T15:45:00Z",
-    complaints: 2,
-    avatar: "/placeholder.svg?height=40&width=40",
-    initials: "JD",
-  },
-  {
-    id: 3,
-    name: "Robert Johnson",
-    email: "robert.johnson@example.com",
-    role: "Citizen",
-    status: "Inactive",
-    lastActive: "2025-02-28T09:15:00Z",
-    complaints: 1,
-    avatar: "/placeholder.svg?height=40&width=40",
-    initials: "RJ",
-  },
-  {
-    id: 4,
-    name: "Emily Williams",
-    email: "emily.williams@example.com",
-    role: "Citizen",
-    status: "Active",
-    lastActive: "2025-03-10T14:20:00Z",
-    complaints: 3,
-    avatar: "/placeholder.svg?height=40&width=40",
-    initials: "EW",
-  },
-  {
-    id: 5,
-    name: "Michael Brown",
-    email: "michael.brown@example.com",
-    role: "Officer",
-    status: "Active",
-    lastActive: "2025-03-12T11:10:00Z",
-    department: "Water Department",
-    avatar: "/placeholder.svg?height=40&width=40",
-    initials: "MB",
-  },
-  {
-    id: 6,
-    name: "Sarah Miller",
-    email: "sarah.miller@example.com",
-    role: "Officer",
-    status: "Active",
-    lastActive: "2025-03-12T09:30:00Z",
-    department: "Electricity Department",
-    avatar: "/placeholder.svg?height=40&width=40",
-    initials: "SM",
-  },
-  {
-    id: 7,
-    name: "David Wilson",
-    email: "david.wilson@example.com",
-    role: "Supervisor",
-    status: "Active",
-    lastActive: "2025-03-12T08:45:00Z",
-    department: "Roads Department",
-    avatar: "/placeholder.svg?height=40&width=40",
-    initials: "DW",
-  },
-  {
-    id: 8,
-    name: "Jennifer Taylor",
-    email: "jennifer.taylor@example.com",
-    role: "Admin",
-    status: "Active",
-    lastActive: "2025-03-12T10:00:00Z",
-    avatar: "/placeholder.svg?height=40&width=40",
-    initials: "JT",
-  },
-]
+// const users = [
+//   {
+//     id: 1,
+//     name: "John Smith",
+//     email: "john.smith@example.com",
+//     role: "Citizen",
+//     status: "Active",
+//     lastActive: "2025-03-12T10:30:00Z",
+//     complaints: 4,
+//     avatar: "/placeholder.svg?height=40&width=40",
+//     initials: "JS",
+//   },
+//   {
+//     id: 2,
+//     name: "Jane Doe",
+//     email: "jane.doe@example.com",
+//     role: "Citizen",
+//     status: "Active",
+//     lastActive: "2025-03-11T15:45:00Z",
+//     complaints: 2,
+//     avatar: "/placeholder.svg?height=40&width=40",
+//     initials: "JD",
+//   },
+//   {
+//     id: 3,
+//     name: "Robert Johnson",
+//     email: "robert.johnson@example.com",
+//     role: "Citizen",
+//     status: "Inactive",
+//     lastActive: "2025-02-28T09:15:00Z",
+//     complaints: 1,
+//     avatar: "/placeholder.svg?height=40&width=40",
+//     initials: "RJ",
+//   },
+//   {
+//     id: 4,
+//     name: "Emily Williams",
+//     email: "emily.williams@example.com",
+//     role: "Citizen",
+//     status: "Active",
+//     lastActive: "2025-03-10T14:20:00Z",
+//     complaints: 3,
+//     avatar: "/placeholder.svg?height=40&width=40",
+//     initials: "EW",
+//   },
+//   {
+//     id: 5,
+//     name: "Michael Brown",
+//     email: "michael.brown@example.com",
+//     role: "Officer",
+//     status: "Active",
+//     lastActive: "2025-03-12T11:10:00Z",
+//     department: "Water Department",
+//     avatar: "/placeholder.svg?height=40&width=40",
+//     initials: "MB",
+//   },
+//   {
+//     id: 6,
+//     name: "Sarah Miller",
+//     email: "sarah.miller@example.com",
+//     role: "Officer",
+//     status: "Active",
+//     lastActive: "2025-03-12T09:30:00Z",
+//     department: "Electricity Department",
+//     avatar: "/placeholder.svg?height=40&width=40",
+//     initials: "SM",
+//   },
+//   {
+//     id: 7,
+//     name: "David Wilson",
+//     email: "david.wilson@example.com",
+//     role: "Supervisor",
+//     status: "Active",
+//     lastActive: "2025-03-12T08:45:00Z",
+//     department: "Roads Department",
+//     avatar: "/placeholder.svg?height=40&width=40",
+//     initials: "DW",
+//   },
+//   {
+//     id: 8,
+//     name: "Jennifer Taylor",
+//     email: "jennifer.taylor@example.com",
+//     role: "Admin",
+//     status: "Active",
+//     lastActive: "2025-03-12T10:00:00Z",
+//     avatar: "/placeholder.svg?height=40&width=40",
+//     initials: "JT",
+//   },
+// ]
 
 export default function UsersPage() {
   const [searchTerm, setSearchTerm] = useState("")
@@ -129,6 +130,10 @@ export default function UsersPage() {
   const [isUserDetailOpen, setIsUserDetailOpen] = useState(false)
   const [isNewUserOpen, setIsNewUserOpen] = useState(false)
 
+  const {allUser} = useAuth()
+
+  const users = allUser
+  console.log(users)
   const formatDate = (dateString: string) => {
     const date = new Date(dateString)
     return date.toLocaleString("en-US", {
@@ -143,15 +148,15 @@ export default function UsersPage() {
 
   const getStatusBadge = (status: string) => {
     switch (status) {
-      case "Active":
+      case "active":
         return (
           <Badge variant="success" className="bg-green-500 hover:bg-green-600">
             Active
           </Badge>
         )
-      case "Inactive":
+      case "inactive":
         return <Badge variant="secondary">Inactive</Badge>
-      case "Suspended":
+      case "suspended":
         return <Badge variant="destructive">Suspended</Badge>
       default:
         return <Badge variant="outline">Unknown</Badge>
@@ -160,13 +165,13 @@ export default function UsersPage() {
 
   const getRoleBadge = (role: string) => {
     switch (role) {
-      case "Admin":
+      case "admin":
         return <Badge className="bg-purple-500 hover:bg-purple-600">Admin</Badge>
-      case "Supervisor":
+      case "supervisor":
         return <Badge className="bg-blue-500 hover:bg-blue-600">Supervisor</Badge>
-      case "Officer":
+      case "officer":
         return <Badge className="bg-orange-500 hover:bg-orange-600">Officer</Badge>
-      case "Citizen":
+      case "citizen":
         return <Badge variant="outline">Citizen</Badge>
       default:
         return <Badge variant="outline">Unknown</Badge>
@@ -344,7 +349,9 @@ export default function UsersPage() {
                         </TableCell>
                       </TableRow>
                     ) : (
-                      filteredUsers.map((user) => (
+                      filteredUsers.map((user) => {
+                        console.log(user)
+                        return(
                         <TableRow key={user.id}>
                           <TableCell>
                             <div className="flex items-center gap-3">
@@ -388,7 +395,7 @@ export default function UsersPage() {
                             </DropdownMenu>
                           </TableCell>
                         </TableRow>
-                      ))
+                      )})
                     )}
                   </TableBody>
                 </Table>
@@ -572,7 +579,7 @@ export default function UsersPage() {
                     <div className="grid gap-4 sm:grid-cols-2">
                       <div>
                         <h3 className="text-sm font-medium text-muted-foreground">User ID</h3>
-                        <p>{selectedUser.id}</p>
+                        <p>{selectedUser._id}</p>
                       </div>
                       <div>
                         <h3 className="text-sm font-medium text-muted-foreground">Last Active</h3>

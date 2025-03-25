@@ -188,7 +188,6 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
     setError(null);
   };
 
-  console.log(allUser)
 
   return (
     <AuthContext.Provider

@@ -37,12 +37,13 @@ import {
 import { Badge } from "@/components/ui/badge";
 import { ModeToggle } from "@/components/theme-toggle";
 import { useDashboard } from "@/context/DashboardContext";
+import { useAuth } from "@/context/AuthContext";
 
 export function AdminSidebar() {
   const { adminStats } = useDashboard();
+  const { user } = useAuth();
   const pathname = usePathname();
 
-  console.log(adminStats?.counts?.totalComplaints)
   const isActive = (href: string) => {
     if (href === "/admin") {
       return pathname === "/admin";
@@ -246,8 +247,8 @@ export function AdminSidebar() {
             </DropdownMenuContent>
           </DropdownMenu>
           <div className="grid gap-0.5 text-xs">
-            <div className="font-medium">Admin User</div>
-            <div className="text-muted-foreground">admin@example.com</div>
+            <div className="font-medium">{user?.name}</div>
+            <div className="text-muted-foreground">{user?.email}</div>
           </div>
         </div>
       </div>
