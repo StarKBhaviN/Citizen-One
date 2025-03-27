@@ -36,11 +36,11 @@ export const ComplaintsProvider = ({ children }: { children: ReactNode }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
-  const getComplaints = async (params?: any) => {
+  const getComplaints = async () => {
     setLoading(true);
     setError(null);
     try {
-      const res = await complaintsAPI.getComplaints(params);
+      const res = await complaintsAPI.getComplaints();
       setComplaints(res.data.data);
       return res.data;
     } catch (err: any) {

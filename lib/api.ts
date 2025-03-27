@@ -55,7 +55,7 @@ export const authAPI = {
 
 // Complaints API
 export const complaintsAPI = {
-  getComplaints: (params: any) => api.get("/complaints", { params }),
+  getComplaints: () => api.get("/complaints"),
   getComplaint: (id: any) => api.get(`/complaints/${id}`),
   createComplaint: (complaintData: { [x: string]: string | Blob; attachments?: any }) => {
     // Handle form data with files

@@ -67,12 +67,12 @@ export function AdminSidebar() {
     },
     { name: "Analytics", href: "/admin/analytics", icon: BarChart3 },
     { name: "Users", href: "/admin/users", icon: Users },
-    {
-      name: "Messages",
-      href: "/admin/messages",
-      icon: MessageSquare,
-      badge: "12",
-    },
+    // {
+    //   name: "Messages",
+    //   href: "/admin/messages",
+    //   icon: MessageSquare,
+    //   badge: "12",
+    // },
     {
       name: "Departments",
       href: "/admin/departments",
@@ -91,9 +91,9 @@ export function AdminSidebar() {
         { name: "Public Services", href: "/admin/departments/public-services" },
       ],
     },
-    { name: "Calendar", href: "/admin/calendar", icon: Calendar },
+    // { name: "Calendar", href: "/admin/calendar", icon: Calendar },
     { name: "Reports", href: "/admin/reports", icon: FileText },
-    { name: "Settings", href: "/admin/settings", icon: Settings },
+    // { name: "Settings", href: "/admin/settings", icon: Settings },
   ];
 
   return (

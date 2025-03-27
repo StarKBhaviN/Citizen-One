@@ -1,10 +1,17 @@
-"use client"
+"use client";
 
-import { useState } from "react"
-import { ArrowUpDown, ChevronDown, Filter, MoreHorizontal, Plus, Search } from "lucide-react"
-import { AdminHeader } from "../components/admin-header"
-import { Button } from "@/components/ui/button"
-import { Input } from "@/components/ui/input"
+import { useEffect, useState } from "react";
+import {
+  ArrowUpDown,
+  ChevronDown,
+  Filter,
+  MoreHorizontal,
+  Plus,
+  Search,
+} from "lucide-react";
+import { AdminHeader } from "../components/admin-header";
+import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -12,91 +19,34 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
-import { Badge } from "@/components/ui/badge"
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog"
+} from "@/components/ui/dropdown-menu";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Badge } from "@/components/ui/badge";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import { useComplaints } from "@/context/ComplaintsContext";
 
 // Mock data for complaints
 const complaints = [
-  {
-    id: "ABC12345",
-    citizen: "John Smith",
-    category: "Water Supply",
-    location: "Sector 7, Block B",
-    status: "In Progress",
-    priority: "Medium",
-    assignedTo: "Water Department",
-    createdAt: "2025-03-10T10:30:00Z",
-    updatedAt: "2025-03-11T09:15:00Z",
-  },
-  {
-    id: "DEF67890",
-    citizen: "Jane Doe",
-    category: "Electricity",
-    location: "Sector 9, Main Road",
-    status: "Submitted",
-    priority: "High",
-    assignedTo: "Electricity Department",
-    createdAt: "2025-03-12T14:20:00Z",
-    updatedAt: "2025-03-12T14:20:00Z",
-  },
-  {
-    id: "GHI12345",
-    citizen: "Robert Johnson",
-    category: "Roads",
-    location: "Sector 5, Cross Road",
-    status: "Under Review",
-    priority: "Low",
-    assignedTo: "Roads Department",
-    createdAt: "2025-03-11T09:45:00Z",
-    updatedAt: "2025-03-11T11:30:00Z",
-  },
-  {
-    id: "JKL67890",
-    citizen: "Emily Williams",
-    category: "Sanitation",
-    location: "Sector 3, Block A",
-    status: "Resolved",
-    priority: "Medium",
-    assignedTo: "Sanitation Department",
-    createdAt: "2025-03-09T16:15:00Z",
-    updatedAt: "2025-03-10T13:45:00Z",
-  },
-  {
-    id: "MNO12345",
-    citizen: "Michael Brown",
-    category: "Water Supply",
-    location: "Sector 8, Block C",
-    status: "In Progress",
-    priority: "High",
-    assignedTo: "Water Department",
-    createdAt: "2025-03-10T11:20:00Z",
-    updatedAt: "2025-03-11T10:30:00Z",
-  },
-  {
-    id: "PQR67890",
-    citizen: "Sarah Miller",
-    category: "Public Services",
-    location: "Sector 2, Community Center",
-    status: "Under Review",
-    priority: "Medium",
-    assignedTo: "Public Services Department",
-    createdAt: "2025-03-11T13:10:00Z",
-    updatedAt: "2025-03-11T15:45:00Z",
-  },
-  {
-    id: "STU12345",
-    citizen: "David Wilson",
-    category: "Electricity",
-    location: "Sector 6, Block D",
-    status: "Submitted",
-    priority: "Low",
-    assignedTo: "Unassigned",
-    createdAt: "2025-03-12T09:30:00Z",
-    updatedAt: "2025-03-12T09:30:00Z",
-  },
   {
     id: "VWX67890",
     citizen: "Jennifer Taylor",
@@ -108,18 +58,32 @@ const complaints = [
     createdAt: "2025-03-08T10:15:00Z",
     updatedAt: "2025-03-10T16:20:00Z",
   },
-]
+];
 
 export default function ComplaintsPage() {
-  const [searchTerm, setSearchTerm] = useState("")
-  const [statusFilter, setStatusFilter] = useState("all")
-  const [categoryFilter, setCategoryFilter] = useState("all")
-  const [priorityFilter, setPriorityFilter] = useState("all")
-  const [selectedComplaint, setSelectedComplaint] = useState<(typeof complaints)[0] | null>(null)
-  const [isDetailOpen, setIsDetailOpen] = useState(false)
+  const [allComplaints, setComplaints] = useState([]);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState("all");
+  const [categoryFilter, setCategoryFilter] = useState("all");
+  const [priorityFilter, setPriorityFilter] = useState("all");
+  const [selectedComplaint, setSelectedComplaint] = useState<
+    (typeof allComplaints)[0] | null
+  >(null);
+  const [isDetailOpen, setIsDetailOpen] = useState(false);
+
+  const { complaints, getComplaints } = useComplaints();
+
+  useEffect(() => {
+    const retrieveComplaints = async () => {
+      await getComplaints();
+      setComplaints(complaints);
+    };
+
+    retrieveComplaints();
+  }, []);
 
   const formatDate = (dateString: string) => {
-    const date = new Date(dateString)
+    const date = new Date(dateString);
     return date.toLocaleString("en-US", {
       year: "numeric",
       month: "short",
@@ -127,57 +91,60 @@ export default function ComplaintsPage() {
       hour: "numeric",
       minute: "numeric",
       hour12: true,
-    })
-  }
+    });
+  };
 
   const getStatusColor = (status: string) => {
     switch (status) {
       case "Submitted":
-        return "bg-blue-500"
+        return "bg-blue-500";
       case "Under Review":
-        return "bg-yellow-500"
+        return "bg-yellow-500";
       case "In Progress":
-        return "bg-orange-500"
+        return "bg-orange-500";
       case "Resolved":
-        return "bg-green-500"
+        return "bg-green-500";
       default:
-        return "bg-gray-500"
+        return "bg-gray-500";
     }
-  }
+  };
 
   const getPriorityBadge = (priority: string) => {
     switch (priority) {
       case "High":
-        return <Badge variant="destructive">High</Badge>
+        return <Badge variant="destructive">High</Badge>;
       case "Medium":
-        return <Badge variant="default">Medium</Badge>
+        return <Badge variant="default">Medium</Badge>;
       case "Low":
-        return <Badge variant="outline">Low</Badge>
+        return <Badge variant="outline">Low</Badge>;
       default:
-        return <Badge variant="secondary">Unknown</Badge>
+        return <Badge variant="secondary">Unknown</Badge>;
     }
-  }
+  };
 
-  const filteredComplaints = complaints.filter((complaint) => {
+  const filteredComplaints = allComplaints.filter((complaint) => {
     const matchesSearch =
       searchTerm === "" ||
       complaint.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
       complaint.citizen.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      complaint.location.toLowerCase().includes(searchTerm.toLowerCase())
+      complaint.location.toLowerCase().includes(searchTerm.toLowerCase());
 
-    const matchesStatus = statusFilter === "all" || complaint.status === statusFilter
+    const matchesStatus =
+      statusFilter === "all" || complaint.status === statusFilter;
 
-    const matchesCategory = categoryFilter === "all" || complaint.category === categoryFilter
+    const matchesCategory =
+      categoryFilter === "all" || complaint.category === categoryFilter;
 
-    const matchesPriority = priorityFilter === "all" || complaint.priority === priorityFilter
+    const matchesPriority =
+      priorityFilter === "all" || complaint.priority === priorityFilter;
 
-    return matchesSearch && matchesStatus && matchesCategory && matchesPriority
-  })
+    return matchesSearch && matchesStatus && matchesCategory && matchesPriority;
+  });
 
-  const handleViewDetails = (complaint: (typeof complaints)[0]) => {
-    setSelectedComplaint(complaint)
-    setIsDetailOpen(true)
-  }
+  const handleViewDetails = (complaint: (typeof allComplaints)[0]) => {
+    setSelectedComplaint(complaint);
+    setIsDetailOpen(true);
+  };
 
   return (
     <div className="flex flex-col min-h-screen">
@@ -187,7 +154,7 @@ export default function ComplaintsPage() {
         <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
           <div className="flex items-center gap-2">
             <h2 className="text-2xl font-bold tracking-tight">Complaints</h2>
-            <Badge className="ml-2">{complaints.length} Total</Badge>
+            <Badge className="ml-2">{allComplaints.length} Total</Badge>
           </div>
           <div className="flex flex-col gap-2 sm:flex-row">
             <div className="relative">
@@ -222,9 +189,10 @@ export default function ComplaintsPage() {
               <SelectContent>
                 <SelectItem value="all">All Statuses</SelectItem>
                 <SelectItem value="Submitted">Submitted</SelectItem>
-                <SelectItem value="Under Review">Under Review</SelectItem>
-                <SelectItem value="In Progress">In Progress</SelectItem>
+                <SelectItem value="Under_review">Under Review</SelectItem>
+                <SelectItem value="In_progress">In Progress</SelectItem>
                 <SelectItem value="Resolved">Resolved</SelectItem>
+                <SelectItem value="Reopened">Reopened</SelectItem>
               </SelectContent>
             </Select>
             <Select value={categoryFilter} onValueChange={setCategoryFilter}>
@@ -235,8 +203,12 @@ export default function ComplaintsPage() {
                 <SelectItem value="all">All Categories</SelectItem>
                 <SelectItem value="Water Supply">Water Supply</SelectItem>
                 <SelectItem value="Electricity">Electricity</SelectItem>
-                <SelectItem value="Roads">Roads</SelectItem>
-                <SelectItem value="Sanitation">Sanitation</SelectItem>
+                <SelectItem value="Roads & Infrastructure">
+                  Roads & Infrastructure
+                </SelectItem>
+                <SelectItem value="Sanitation & Waste">
+                  Sanitation & Waste
+                </SelectItem>
                 <SelectItem value="Public Services">Public Services</SelectItem>
               </SelectContent>
             </Select>
@@ -283,20 +255,30 @@ export default function ComplaintsPage() {
                 </TableRow>
               ) : (
                 filteredComplaints.map((complaint) => (
-                  <TableRow key={complaint.id}>
-                    <TableCell className="font-medium">{complaint.id}</TableCell>
-                    <TableCell>{complaint.citizen}</TableCell>
-                    <TableCell>{complaint.category}</TableCell>
-                    <TableCell className="max-w-[200px] truncate">{complaint.location}</TableCell>
+                  <TableRow key={complaint?.complaintId}>
+                    <TableCell className="font-medium">
+                      {complaint?.complaintId}
+                    </TableCell>
+                    <TableCell>{complaint?.citizen?.name}</TableCell>
+                    <TableCell>{complaint?.category}</TableCell>
+                    <TableCell className="max-w-[200px] truncate">
+                      {complaint?.location}
+                    </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2">
-                        <span className={`h-2 w-2 rounded-full ${getStatusColor(complaint.status)}`} />
-                        <span>{complaint.status}</span>
+                        <span
+                          className={`h-2 w-2 rounded-full ${getStatusColor(
+                            complaint?.status
+                          )}`}
+                        />
+                        <span>{complaint?.status}</span>
                       </div>
                     </TableCell>
-                    <TableCell>{getPriorityBadge(complaint.priority)}</TableCell>
-                    <TableCell>{complaint.assignedTo}</TableCell>
-                    <TableCell>{formatDate(complaint.createdAt)}</TableCell>
+                    <TableCell>
+                      {getPriorityBadge(complaint?.priority)}
+                    </TableCell>
+                    <TableCell>{complaint?.assignedTo || "Unknown"}</TableCell>
+                    <TableCell>{formatDate(complaint?.createdAt)}</TableCell>
                     <TableCell className="text-right">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
@@ -308,7 +290,11 @@ export default function ComplaintsPage() {
                         <DropdownMenuContent align="end">
                           <DropdownMenuLabel>Actions</DropdownMenuLabel>
                           <DropdownMenuSeparator />
-                          <DropdownMenuItem onClick={() => handleViewDetails(complaint)}>View Details</DropdownMenuItem>
+                          <DropdownMenuItem
+                            onClick={() => handleViewDetails(complaint)}
+                          >
+                            View Details
+                          </DropdownMenuItem>
                           <DropdownMenuItem>Assign</DropdownMenuItem>
                           <DropdownMenuItem>Update Status</DropdownMenuItem>
                           <DropdownMenuItem>Add Comment</DropdownMenuItem>
@@ -328,66 +314,101 @@ export default function ComplaintsPage() {
         <DialogContent className="max-w-3xl">
           <DialogHeader>
             <DialogTitle>Complaint Details</DialogTitle>
-            <DialogDescription>Complaint ID: {selectedComplaint?.id}</DialogDescription>
+            <DialogDescription>
+              Complaint ID: {selectedComplaint?.complaintId}
+            </DialogDescription>
           </DialogHeader>
 
           {selectedComplaint && (
             <div className="grid gap-6">
               <div className="grid gap-4 sm:grid-cols-2">
                 <div>
-                  <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Citizen</h3>
-                  <p className="mt-1">{selectedComplaint.citizen}</p>
+                  <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                    Citizen
+                  </h3>
+                  <p className="mt-1">{selectedComplaint.citizen.name}</p>
                 </div>
                 <div>
-                  <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Category</h3>
+                  <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                    Category
+                  </h3>
                   <p className="mt-1">{selectedComplaint.category}</p>
                 </div>
                 <div>
-                  <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Location</h3>
+                  <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                    Location
+                  </h3>
                   <p className="mt-1">{selectedComplaint.location}</p>
                 </div>
                 <div>
-                  <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Status</h3>
+                  <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                    Status
+                  </h3>
                   <div className="mt-1 flex items-center gap-2">
-                    <span className={`h-2 w-2 rounded-full ${getStatusColor(selectedComplaint.status)}`} />
+                    <span
+                      className={`h-2 w-2 rounded-full ${getStatusColor(
+                        selectedComplaint.status
+                      )}`}
+                    />
                     <span>{selectedComplaint.status}</span>
                   </div>
                 </div>
                 <div>
-                  <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Priority</h3>
-                  <p className="mt-1">{getPriorityBadge(selectedComplaint.priority)}</p>
+                  <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                    Priority
+                  </h3>
+                  <p className="mt-1">
+                    {getPriorityBadge(selectedComplaint.priority)}
+                  </p>
                 </div>
                 <div>
-                  <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Assigned To</h3>
+                  <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                    Assigned To
+                  </h3>
                   <p className="mt-1">{selectedComplaint.assignedTo}</p>
                 </div>
                 <div>
-                  <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Created At</h3>
-                  <p className="mt-1">{formatDate(selectedComplaint.createdAt)}</p>
+                  <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                    Created At
+                  </h3>
+                  <p className="mt-1">
+                    {formatDate(selectedComplaint.createdAt)}
+                  </p>
                 </div>
                 <div>
-                  <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Last Updated</h3>
-                  <p className="mt-1">{formatDate(selectedComplaint.updatedAt)}</p>
+                  <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                    Last Updated
+                  </h3>
+                  <p className="mt-1">
+                    {formatDate(selectedComplaint.updatedAt)}
+                  </p>
                 </div>
               </div>
 
               <div>
-                <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Description</h3>
+                <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                  Description
+                </h3>
                 <p className="mt-1">
-                  Water supply has been disrupted in my area for the past 3 days. The entire block is affected and we
-                  are facing severe water shortage.
+                  Water supply has been disrupted in my area for the past 3
+                  days. The entire block is affected and we are facing severe
+                  water shortage.
                 </p>
               </div>
 
               <div className="grid gap-4">
-                <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Timeline</h3>
+                <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                  Timeline
+                </h3>
                 <ol className="relative border-l border-gray-200 dark:border-gray-700">
                   <li className="mb-6 ml-6">
                     <span className="absolute -left-3 flex h-6 w-6 items-center justify-center rounded-full bg-blue-500 ring-8 ring-white dark:ring-gray-900">
                       <span className="text-white text-xs">1</span>
                     </span>
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-                      <h3 className="text-base font-semibold text-gray-900 dark:text-white">Submitted</h3>
+                      <h3 className="text-base font-semibold text-gray-900 dark:text-white">
+                        Submitted
+                      </h3>
                       <time className="mb-1 text-sm font-normal text-gray-400 sm:mb-0">
                         {formatDate(selectedComplaint.createdAt)}
                       </time>
@@ -395,14 +416,18 @@ export default function ComplaintsPage() {
                     <p className="text-base font-normal text-gray-500 dark:text-gray-400">
                       Complaint submitted successfully
                     </p>
-                    <p className="mt-1 text-sm text-gray-400">Department: Citizen Portal</p>
+                    <p className="mt-1 text-sm text-gray-400">
+                      Department: Citizen Portal
+                    </p>
                   </li>
                   <li className="mb-6 ml-6">
                     <span className="absolute -left-3 flex h-6 w-6 items-center justify-center rounded-full bg-yellow-500 ring-8 ring-white dark:ring-gray-900">
                       <span className="text-white text-xs">2</span>
                     </span>
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-                      <h3 className="text-base font-semibold text-gray-900 dark:text-white">Under Review</h3>
+                      <h3 className="text-base font-semibold text-gray-900 dark:text-white">
+                        Under Review
+                      </h3>
                       <time className="mb-1 text-sm font-normal text-gray-400 sm:mb-0">
                         {formatDate("2025-03-10T14:45:00Z")}
                       </time>
@@ -410,14 +435,18 @@ export default function ComplaintsPage() {
                     <p className="text-base font-normal text-gray-500 dark:text-gray-400">
                       Complaint assigned to Water Department
                     </p>
-                    <p className="mt-1 text-sm text-gray-400">Department: Complaint Cell</p>
+                    <p className="mt-1 text-sm text-gray-400">
+                      Department: Complaint Cell
+                    </p>
                   </li>
                   <li className="ml-6">
                     <span className="absolute -left-3 flex h-6 w-6 items-center justify-center rounded-full bg-orange-500 ring-8 ring-white dark:ring-gray-900">
                       <span className="text-white text-xs">3</span>
                     </span>
                     <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between">
-                      <h3 className="text-base font-semibold text-gray-900 dark:text-white">In Progress</h3>
+                      <h3 className="text-base font-semibold text-gray-900 dark:text-white">
+                        In Progress
+                      </h3>
                       <time className="mb-1 text-sm font-normal text-gray-400 sm:mb-0">
                         {formatDate(selectedComplaint.updatedAt)}
                       </time>
@@ -425,27 +454,38 @@ export default function ComplaintsPage() {
                     <p className="text-base font-normal text-gray-500 dark:text-gray-400">
                       Water Department team dispatched to the location
                     </p>
-                    <p className="mt-1 text-sm text-gray-400">Department: Water Department</p>
+                    <p className="mt-1 text-sm text-gray-400">
+                      Department: Water Department
+                    </p>
                   </li>
                 </ol>
               </div>
 
               <div className="grid gap-4">
-                <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">Comments</h3>
+                <h3 className="text-sm font-medium text-gray-500 dark:text-gray-400">
+                  Comments
+                </h3>
                 <div className="space-y-4">
                   <div className="rounded-lg border p-4">
                     <div className="flex items-start gap-4">
                       <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
-                        <span className="text-xs font-medium text-primary">JD</span>
+                        <span className="text-xs font-medium text-primary">
+                          JD
+                        </span>
                       </div>
                       <div className="grid gap-1">
                         <div className="flex items-center gap-2">
-                          <span className="font-medium">John Doe (Water Department)</span>
-                          <span className="text-xs text-muted-foreground">{formatDate("2025-03-11T09:15:00Z")}</span>
+                          <span className="font-medium">
+                            John Doe (Water Department)
+                          </span>
+                          <span className="text-xs text-muted-foreground">
+                            {formatDate("2025-03-11T09:15:00Z")}
+                          </span>
                         </div>
                         <p className="text-sm">
-                          Team has been dispatched to investigate the issue. Initial assessment suggests a main pipeline
-                          issue affecting the entire block.
+                          Team has been dispatched to investigate the issue.
+                          Initial assessment suggests a main pipeline issue
+                          affecting the entire block.
                         </p>
                       </div>
                     </div>
@@ -453,16 +493,23 @@ export default function ComplaintsPage() {
                   <div className="rounded-lg border p-4">
                     <div className="flex items-start gap-4">
                       <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
-                        <span className="text-xs font-medium text-primary">SM</span>
+                        <span className="text-xs font-medium text-primary">
+                          SM
+                        </span>
                       </div>
                       <div className="grid gap-1">
                         <div className="flex items-center gap-2">
-                          <span className="font-medium">Sarah Miller (Supervisor)</span>
-                          <span className="text-xs text-muted-foreground">{formatDate("2025-03-11T10:30:00Z")}</span>
+                          <span className="font-medium">
+                            Sarah Miller (Supervisor)
+                          </span>
+                          <span className="text-xs text-muted-foreground">
+                            {formatDate("2025-03-11T10:30:00Z")}
+                          </span>
                         </div>
                         <p className="text-sm">
-                          Please prioritize this issue as it's affecting a large residential area. Arrange for water
-                          tankers as a temporary solution.
+                          Please prioritize this issue as it's affecting a large
+                          residential area. Arrange for water tankers as a
+                          temporary solution.
                         </p>
                       </div>
                     </div>
@@ -480,6 +527,5 @@ export default function ComplaintsPage() {
         </DialogContent>
       </Dialog>
     </div>
-  )
+  );
 }
-
